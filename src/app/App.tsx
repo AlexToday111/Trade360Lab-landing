@@ -171,5 +171,6 @@ export default function App() {
         onClose={() => setIsAboutModalOpen(false)}
       />
     </div>
+    
   )
 }
