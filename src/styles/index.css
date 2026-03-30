@@ -1,0 +1,55 @@
+@import './fonts.css';
+@import './tailwind.css';
+@import './theme.css';
+
+:root {
+  --orbit-neon: #00ff88;
+}
+
+.orbital-system {
+  perspective: 1600px;
+  transform-style: preserve-3d;
+}
+
+.orbital-core {
+  box-shadow:
+    inset 0 0 40px rgba(0, 255, 136, 0.08),
+    0 0 60px rgba(0, 255, 136, 0.08);
+}
+
+.orbital-rotator {
+  animation-name: orbital-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.orbital-svg {
+  filter:
+    drop-shadow(0 0 12px rgba(0, 255, 136, 0.12))
+    drop-shadow(0 0 30px rgba(0, 255, 136, 0.06));
+}
+
+.orbital-particle {
+  filter:
+    drop-shadow(0 0 8px rgba(0, 255, 136, 0.55))
+    drop-shadow(0 0 16px rgba(0, 255, 136, 0.22));
+}
+
+@keyframes orbital-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbital-rotator {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
