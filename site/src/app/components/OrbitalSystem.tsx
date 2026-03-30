@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { memo, type CSSProperties } from 'react'
 
 type OrbitParticle = {
   duration: string
@@ -100,7 +100,7 @@ function getEllipsePath(rx: number, ry: number) {
   return `M ${500 - rx},500 a ${rx},${ry} 0 1,0 ${rx * 2},0 a ${rx},${ry} 0 1,0 -${rx * 2},0`
 }
 
-export function OrbitalSystem() {
+export const OrbitalSystem = memo(function OrbitalSystem() {
   return (
     <div
       aria-hidden="true"
@@ -132,7 +132,7 @@ export function OrbitalSystem() {
         return (
           <div
             key={orbit.id}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mix-blend-screen"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
             style={shellStyle}
           >
             <div className="h-full w-full" style={planeStyle}>
@@ -185,4 +185,4 @@ export function OrbitalSystem() {
       })}
     </div>
   )
-}
+})

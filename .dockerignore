@@ -1,5 +1,7 @@
 node_modules
 dist
+site/node_modules
+site/dist
 .git
 .idea
 npm-debug.log*

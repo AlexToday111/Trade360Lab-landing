@@ -62,7 +62,7 @@ export default function App() {
           className="relative mb-6"
         >
           <motion.div
-            className="absolute inset-0 bg-[#c8f24a] opacity-30 blur-3xl"
+            className="absolute inset-0 bg-[#c8f24a] opacity-30 blur-2xl"
             animate={{ opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 3, ease: 'easeInOut', repeat: Number.POSITIVE_INFINITY }}
           />
