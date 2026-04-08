@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./site/public/YellowLogo.png" alt="TradeLab Logo" />
+  <img src="./site/public/YellowLogo.png" alt="TradeLab Logo" width='600'/>
 </p>
 
 <h1 align="center">Landing page</h1>
