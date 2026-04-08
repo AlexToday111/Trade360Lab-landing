@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="./site/public/Logo.png" alt="TradeLab Logo" />
+  <img src="./site/public/YellowLogo.png" alt="TradeLab Logo" />
 </p>
 
-<h1 align="center">Trade360Lab Landing</h1>
+<h1 align="center">Landing page</h1>
 
 Лендинг для `Trade360Lab` на `Vite + React + Tailwind CSS v4`.
 
