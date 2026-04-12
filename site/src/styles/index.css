@@ -7,6 +7,11 @@
   --orbit-glow-rgb: 143 170 34;
 }
 
+.dark {
+  --orbit-neon: #00ff88;
+  --orbit-glow-rgb: 0 255 136;
+}
+
 .orbital-system {
   perspective: 1600px;
   contain: layout paint style;
