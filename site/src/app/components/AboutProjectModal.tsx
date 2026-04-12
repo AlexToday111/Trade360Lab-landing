@@ -72,7 +72,7 @@ export function AboutProjectModal({ open, onClose }: AboutProjectModalProps) {
           <motion.button
             type="button"
             aria-label="Закрыть модальное окно о проекте"
-            className="absolute inset-0 bg-[rgba(3,8,6,0.78)] backdrop-blur-sm"
+            className="absolute inset-0 bg-[rgba(29,36,24,0.22)] backdrop-blur-sm"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -84,28 +84,26 @@ export function AboutProjectModal({ open, onClose }: AboutProjectModalProps) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="about-project-title"
-            className="relative z-10 w-full max-w-3xl overflow-hidden rounded-[28px] border border-[#c8f24a]/18 bg-[linear-gradient(180deg,rgba(18,20,12,0.92)_0%,rgba(9,10,7,0.95)_100%)] shadow-[0_0_40px_rgba(200,242,74,0.08),0_24px_72px_rgba(0,0,0,0.62)] backdrop-blur-xl"
+            className="relative z-10 w-full max-w-3xl overflow-hidden rounded-[28px] border border-[#d7dfc5] bg-[linear-gradient(180deg,rgba(255,255,255,0.96)_0%,rgba(246,247,240,0.98)_100%)] shadow-[0_18px_48px_rgba(31,39,29,0.14),0_30px_80px_rgba(31,39,29,0.1)] backdrop-blur-xl"
             initial={{ opacity: 0, scale: 0.95, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 10 }}
             transition={{ duration: 0.28, ease: 'easeOut' }}
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#c8f24a]/60 to-transparent" />
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(200,242,74,0.16)_0%,rgba(200,242,74,0)_72%)]" />
+            <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#9bb43d]/60 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,rgba(200,242,74,0.2)_0%,rgba(200,242,74,0)_72%)]" />
 
             <div className="scrollbar-hidden relative max-h-[min(80vh,760px)] overflow-y-auto px-6 py-6 sm:px-8 sm:py-8">
               <div className="mb-8 flex items-start justify-between gap-6">
                 <div className="max-w-xl">
                   <h2
                     id="about-project-title"
-                    className="mb-3 text-3xl font-black tracking-tight text-[#c8f24a]/80 sm:text-4xl"
+                    className="mb-3 text-3xl font-black tracking-tight text-[#20251e] sm:text-4xl"
                   >
                     О проекте Trade360Lab
                   </h2>
-                  <p
-                    className="max-w-2xl text-sm leading-7 text-slate-300 sm:text-[15px]"
-                  >
+                  <p className="max-w-2xl text-sm leading-7 text-[#586150] sm:text-[15px]">
                     Сфокусированная продуктовая среда для исследовательских процессов в
                     трейдинге с премиальным локальным опытом исполнения.
                   </p>
@@ -115,7 +113,7 @@ export function AboutProjectModal({ open, onClose }: AboutProjectModalProps) {
                   type="button"
                   aria-label="Закрыть модальное окно"
                   onClick={onClose}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-colors duration-200 hover:border-[#c8f24a]/35 hover:bg-[#c8f24a]/10 hover:text-[#eef8af]"
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#d8decb] bg-white/80 text-[#56604f] transition-colors duration-200 hover:border-[#bfd199] hover:bg-[#f4f7e9] hover:text-[#20251e]"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -124,39 +122,29 @@ export function AboutProjectModal({ open, onClose }: AboutProjectModalProps) {
               <div className="space-y-8">
                 {sections.map((section) => (
                   <section key={section.title}>
-                    <h3
-                      className="mb-3 text-sm font-extrabold uppercase tracking-[0.22em] text-[#c8f24a]/80"
-                    >
+                    <h3 className="mb-3 text-sm font-extrabold uppercase tracking-[0.22em] text-[#839d2d]">
                       {section.title}
                     </h3>
-                    <p
-                      className="max-w-2xl text-sm leading-7 text-slate-300 sm:text-[15px]"
-                    >
+                    <p className="max-w-2xl text-sm leading-7 text-[#586150] sm:text-[15px]">
                       {section.content}
                     </p>
                   </section>
                 ))}
 
                 <section>
-                  <h3
-                    className="mb-4 text-sm font-extrabold uppercase tracking-[0.22em] text-[#c8f24a]/80"
-                  >
+                  <h3 className="mb-4 text-sm font-extrabold uppercase tracking-[0.22em] text-[#839d2d]">
                     Технологии
                   </h3>
                   <div className="grid gap-3 sm:grid-cols-3">
                     {techStack.map((item) => (
                       <div
                         key={item.label}
-                        className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                        className="rounded-2xl border border-[#e0e5d6] bg-white/80 px-4 py-4 shadow-[0_12px_28px_rgba(31,39,29,0.06)]"
                       >
-                        <p
-                          className="text-[11px] uppercase tracking-[0.24em] text-slate-500"
-                        >
+                        <p className="text-[11px] uppercase tracking-[0.24em] text-[#7b846f]">
                           {item.label}
                         </p>
-                        <p
-                          className="mt-2 text-sm font-medium text-slate-100"
-                        >
+                        <p className="mt-2 text-sm font-medium text-[#23281f]">
                           {item.value}
                         </p>
                       </div>
@@ -165,18 +153,16 @@ export function AboutProjectModal({ open, onClose }: AboutProjectModalProps) {
                 </section>
 
                 <section>
-                  <h3
-                    className="mb-4 text-sm font-extrabold uppercase tracking-[0.22em] text-[#c8f24a]/80"
-                  >
+                  <h3 className="mb-4 text-sm font-extrabold uppercase tracking-[0.22em] text-[#839d2d]">
                     Возможности
                   </h3>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {features.map((feature) => (
                       <div
                         key={feature}
-                        className="rounded-2xl border border-[#c8f24a]/12 bg-[#c8f24a]/[0.035] px-4 py-4 text-sm text-slate-200"
+                        className="rounded-2xl border border-[#d7dfc5] bg-[#f4f7e9] px-4 py-4 text-sm text-[#374032]"
                       >
-                        <div className="mb-3 h-px w-12 bg-gradient-to-r from-[#c8f24a]/70 to-transparent" />
+                        <div className="mb-3 h-px w-12 bg-gradient-to-r from-[#9bb43d]/80 to-transparent" />
                         {feature}
                       </div>
                     ))}

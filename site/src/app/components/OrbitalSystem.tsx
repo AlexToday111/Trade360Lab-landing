@@ -106,9 +106,9 @@ export const OrbitalSystem = memo(function OrbitalSystem() {
       aria-hidden="true"
       className="orbital-system absolute inset-0 z-[1] overflow-hidden pointer-events-none"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,136,0.12)_0%,rgba(0,255,136,0.05)_18%,rgba(10,10,10,0)_54%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(200,242,74,0.18)_0%,rgba(200,242,74,0.08)_18%,rgba(246,244,236,0)_54%)]" />
 
-      <div className="absolute top-1/2 left-1/2 h-[clamp(180px,22vw,280px)] w-[clamp(180px,22vw,280px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#00ff88]/12 orbital-core" />
+      <div className="absolute top-1/2 left-1/2 h-[clamp(180px,22vw,280px)] w-[clamp(180px,22vw,280px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#8faa22]/18 orbital-core" />
 
       {orbitLayers.map((orbit) => {
         const orbitPath = getEllipsePath(orbit.rx, orbit.ry)
@@ -145,13 +145,13 @@ export const OrbitalSystem = memo(function OrbitalSystem() {
                   <path
                     d={orbitPath}
                     fill="none"
-                    stroke="rgba(0, 255, 136, 0.12)"
+                    stroke="rgba(143, 170, 34, 0.12)"
                     strokeWidth={orbit.strokeWidth * 5.5}
                   />
                   <path
                     d={orbitPath}
                     fill="none"
-                    stroke="rgba(160, 255, 214, 0.8)"
+                    stroke="rgba(135, 158, 52, 0.55)"
                     strokeWidth={orbit.strokeWidth}
                     vectorEffect="non-scaling-stroke"
                   />
@@ -164,7 +164,7 @@ export const OrbitalSystem = memo(function OrbitalSystem() {
                         cx="0"
                         cy="0"
                         r={particle.radius}
-                        fill={`rgba(210, 255, 233, ${particle.opacity})`}
+                        fill={`rgba(160, 186, 70, ${particle.opacity})`}
                       >
                         <animateMotion
                           dur={particle.duration}

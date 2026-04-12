@@ -18,35 +18,37 @@ export function HomeLanding({ repositoryUrl }: HomeLandingProps) {
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-[#0a0a0a] text-white">
+    <div className="relative min-h-screen w-full overflow-hidden bg-[#f6f4ec] text-[#182016]">
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-60"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(200, 242, 74, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(200, 242, 74, 0.1) 1px, transparent 1px)
+            linear-gradient(rgba(37, 46, 32, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(37, 46, 32, 0.05) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px',
         }}
       />
 
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(200,242,74,0.24)_0%,rgba(200,242,74,0)_38%),radial-gradient(circle_at_85%_18%,rgba(243,180,108,0.16)_0%,rgba(243,180,108,0)_28%)]" />
+
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
         <div
-          className="absolute text-[20vw] font-bold opacity-[0.03] whitespace-nowrap"
+          className="absolute text-[20vw] font-bold opacity-[0.08] whitespace-nowrap"
           style={{
             color: 'transparent',
             fontFamily: 'Sora, sans-serif',
-            WebkitTextStroke: '2px rgba(200, 242, 74, 0.3)',
+            WebkitTextStroke: '2px rgba(32, 37, 30, 0.12)',
           }}
         >
           T360 LAB
         </div>
         <div
-          className="absolute top-[20%] text-[20vw] font-bold opacity-[0.02] whitespace-nowrap"
+          className="absolute top-[20%] text-[20vw] font-bold opacity-[0.05] whitespace-nowrap"
           style={{
             color: 'transparent',
             fontFamily: 'Sora, sans-serif',
-            WebkitTextStroke: '2px rgba(200, 242, 74, 0.2)',
+            WebkitTextStroke: '2px rgba(143, 170, 34, 0.14)',
           }}
         >
           T360 LAB
@@ -63,23 +65,23 @@ export function HomeLanding({ repositoryUrl }: HomeLandingProps) {
           className="relative mb-6"
         >
           <motion.div
-            className="absolute inset-0 bg-[#c8f24a] opacity-30 blur-2xl"
+            className="absolute inset-0 bg-[#c8f24a] opacity-35 blur-3xl"
             animate={{ opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 3, ease: 'easeInOut', repeat: Number.POSITIVE_INFINITY }}
           />
 
           <div className="relative">
             <h1 className="relative flex items-baseline justify-center text-center text-[4.9rem] font-black tracking-tight md:text-[8.5rem]">
-              <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+              <span className="text-[#1f271d] drop-shadow-[0_14px_24px_rgba(31,39,29,0.08)]">
                 T360
               </span>
-              <span className="-ml-[0.04em] -translate-y-1 text-[3.3rem] font-bold text-[#c8f24a]/80 drop-shadow-[0_0_15px_rgba(200,242,74,0.2)] md:-ml-[0.05em] md:-translate-y-0 md:text-[4.8rem]">
+              <span className="-ml-[0.04em] -translate-y-1 text-[3.3rem] font-bold text-[#8faa22] drop-shadow-[0_12px_28px_rgba(143,170,34,0.18)] md:-ml-[0.05em] md:-translate-y-0 md:text-[4.8rem]">
                 LAB
               </span>
             </h1>
 
             <motion.div
-              className="-mt-6 h-[2px] bg-gradient-to-r from-transparent via-[#c8f24a]/40 to-transparent"
+              className="-mt-6 h-[2px] bg-gradient-to-r from-transparent via-[#9bb43d]/45 to-transparent"
               initial={{ width: 0 }}
               animate={{ width: '100%' }}
               transition={{ duration: 1.5, delay: 0.5 }}
@@ -91,9 +93,9 @@ export function HomeLanding({ repositoryUrl }: HomeLandingProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="mb-20 max-w-2xl text-center text-xl font-medium uppercase tracking-[0.28em] text-white/90 md:text-[1.4rem]"
+          className="mb-20 max-w-2xl text-center text-xl font-medium uppercase tracking-[0.28em] text-[#2d3527]/85 md:text-[1.4rem]"
           style={{
-            textShadow: '0 0 8px rgba(0,255,136,0.6), 0 0 20px rgba(0,255,136,0.3)',
+            textShadow: '0 0 10px rgba(143,170,34,0.16)',
           }}
         >
           Build. Test. Explore.
@@ -109,11 +111,11 @@ export function HomeLanding({ repositoryUrl }: HomeLandingProps) {
             href={repositoryUrl}
             target="_blank"
             rel="noreferrer"
-            className="group relative overflow-hidden rounded-lg bg-[#c8f24a] px-8 py-4 font-semibold text-black transition-all duration-300"
+            className="group relative overflow-hidden rounded-lg bg-[#20251e] px-8 py-4 font-semibold text-white shadow-[0_14px_28px_rgba(31,39,29,0.16)] transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="absolute inset-0 bg-[#c8f24a] opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-50" />
+            <div className="absolute inset-0 bg-[#c8f24a] opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-30" />
             <div className="relative flex items-center gap-2">
               <Github className="h-5 w-5" />
               <span>View Repository</span>
@@ -123,7 +125,7 @@ export function HomeLanding({ repositoryUrl }: HomeLandingProps) {
           <motion.button
             type="button"
             onClick={() => setIsAboutModalOpen(true)}
-            className="group relative overflow-hidden rounded-lg border-2 border-[#c8f24a]/50 bg-transparent px-8 py-4 font-semibold text-[#c8f24a] transition-all duration-300 hover:border-[#c8f24a] hover:bg-[#c8f24a]/10"
+            className="group relative overflow-hidden rounded-lg border-2 border-[#bfc9ac] bg-white/70 px-8 py-4 font-semibold text-[#2d3527] shadow-[0_10px_24px_rgba(31,39,29,0.08)] transition-all duration-300 hover:border-[#9bb43d] hover:bg-[#f1f5e5]"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -142,21 +144,21 @@ export function HomeLanding({ repositoryUrl }: HomeLandingProps) {
         >
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="text-3xl font-bold text-[#c8f24a] md:text-4xl">{stat.value}</div>
-              <div className="mt-1 text-xs text-gray-400 md:text-sm">{stat.label}</div>
+              <div className="text-3xl font-bold text-[#8faa22] md:text-4xl">{stat.value}</div>
+              <div className="mt-1 text-xs text-[#67705d] md:text-sm">{stat.label}</div>
             </div>
           ))}
         </motion.div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[10px] tracking-widest text-[#c8f24a]/40 md:text-xs">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[10px] tracking-widest text-[#748063] md:text-xs">
         STRATEGY RESEARCH / BACKTESTING / OPTIMIZATION
       </div>
 
-      <div className="absolute top-0 left-0 h-32 w-32 border-l-2 border-t-2 border-[#c8f24a]/20" />
-      <div className="absolute top-0 right-0 h-32 w-32 border-r-2 border-t-2 border-[#c8f24a]/20" />
-      <div className="absolute bottom-0 left-0 h-32 w-32 border-l-2 border-b-2 border-[#c8f24a]/20" />
-      <div className="absolute right-0 bottom-0 h-32 w-32 border-r-2 border-b-2 border-[#c8f24a]/20" />
+      <div className="absolute top-0 left-0 h-32 w-32 border-l-2 border-t-2 border-[#c8d59f]/70" />
+      <div className="absolute top-0 right-0 h-32 w-32 border-r-2 border-t-2 border-[#c8d59f]/70" />
+      <div className="absolute bottom-0 left-0 h-32 w-32 border-l-2 border-b-2 border-[#c8d59f]/70" />
+      <div className="absolute right-0 bottom-0 h-32 w-32 border-r-2 border-b-2 border-[#c8d59f]/70" />
 
       <AboutProjectModal
         open={isAboutModalOpen}
