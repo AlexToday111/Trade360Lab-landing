@@ -18,8 +18,7 @@ function resolvePageMode() {
   const isDocsPath =
     normalizedPath === '/docs' ||
     normalizedPath === '/docs/' ||
-    normalizedPath === '/documentation' ||
-    normalizedPath === '/documentation/'
+    normalizedPath.startsWith('/docs/')
 
   return isDocsHost || isDocsPath ? 'docs' : 'home'
 }
@@ -82,15 +81,34 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', !isLightTheme)
+    document.documentElement.classList.toggle('dark', pageMode === 'docs' || !isLightTheme)
 
     return () => {
       document.documentElement.classList.remove('dark')
     }
-  }, [isLightTheme])
+  }, [isLightTheme, pageMode])
+
+  useEffect(() => {
+    const description = document.querySelector('meta[name="description"]')
+
+    if (pageMode === 'docs') {
+      document.title = 'Trade360Lab Docs'
+      description?.setAttribute(
+        'content',
+        'Product and technical documentation for Trade360Lab',
+      )
+      return
+    }
+
+    document.title = 'Trade360Lab'
+    description?.setAttribute(
+      'content',
+      'Trade360Lab page for strategy research, backtesting, and trading workflow exploration.',
+    )
+  }, [pageMode])
 
   return pageMode === 'docs' ? (
-    <DocumentationHub repositoryUrl={repositoryUrl} />
+    <DocumentationHub />
   ) : (
     <HomeLanding repositoryUrl={repositoryUrl} isLightTheme={isLightTheme} />
   )
