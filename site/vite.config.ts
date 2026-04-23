@@ -22,9 +22,9 @@ export default defineConfig({
         const docsHtml = indexHtml
           .replace(
             /<meta\s+name="description"\s+content="[^"]*"\s*\/>/,
-            '<meta name="description" content="Product and technical documentation for Trade360Lab" />',
+            '<meta name="description" content="Продуктовая и техническая документация Trade360Lab" />',
           )
-          .replace(/<title>.*?<\/title>/, '<title>Trade360Lab Docs</title>')
+          .replace(/<title>.*?<\/title>/, '<title>Документация Trade360Lab</title>')
         const docsDir = path.join(distDir, 'docs')
 
         fs.mkdirSync(docsDir, { recursive: true })

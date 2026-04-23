@@ -81,7 +81,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', pageMode === 'docs' || !isLightTheme)
+    document.documentElement.classList.toggle('dark', !isLightTheme)
 
     return () => {
       document.documentElement.classList.remove('dark')
@@ -92,10 +92,10 @@ export default function App() {
     const description = document.querySelector('meta[name="description"]')
 
     if (pageMode === 'docs') {
-      document.title = 'Trade360Lab Docs'
+      document.title = 'Документация Trade360Lab'
       description?.setAttribute(
         'content',
-        'Product and technical documentation for Trade360Lab',
+        'Продуктовая и техническая документация Trade360Lab',
       )
       return
     }
@@ -108,7 +108,7 @@ export default function App() {
   }, [pageMode])
 
   return pageMode === 'docs' ? (
-    <DocumentationHub />
+    <DocumentationHub isLightTheme={isLightTheme} />
   ) : (
     <HomeLanding repositoryUrl={repositoryUrl} isLightTheme={isLightTheme} />
   )
