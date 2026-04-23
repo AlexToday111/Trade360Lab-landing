@@ -121,7 +121,7 @@ function MethodBadge({ method }: { method: 'GET' | 'POST' }) {
 
 export function DocsPage() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#070807] text-white">
+    <main className="min-h-screen overflow-hidden bg-[#070807] text-white selection:bg-[#c8f24a]/30 selection:text-white">
       <div
         className="pointer-events-none fixed inset-0 opacity-30"
         style={{
