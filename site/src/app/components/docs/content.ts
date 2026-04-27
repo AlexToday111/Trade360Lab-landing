@@ -32,7 +32,9 @@ export type ArchitectureLayer = {
   sourceName: string
   description: string
   responsibilities: string[]
+  details: string[]
   icon: LucideIcon
+  skillIcon: string
 }
 
 export type ApiMethod = 'GET' | 'POST' | 'PUT/PATCH' | 'DELETE'
@@ -67,11 +69,25 @@ export type DataEntity = {
   description: string
   fields: string[]
   notes: string[]
+  details: { label: string; value: string }[]
 }
 
 export type LaunchGroup = {
   title: string
   items: string[]
+}
+
+export type LaunchPort = {
+  service: string
+  url: string
+  env: string
+}
+
+export type LaunchLocalService = {
+  title: string
+  path: string
+  command: string
+  detail: string
 }
 
 export const projectDescription =
@@ -121,32 +137,40 @@ export const overviewCards: OverviewCard[] = [
 
 export const architectureLayers: ArchitectureLayer[] = [
   {
-    title: 'Frontend',
+    title: 'Next.js',
     sourceName: 'frontend',
-    description: 'Интерфейс создает запросы на запуск бэктеста и показывает статусы, summary, сделки и equity curve.',
+    description: 'Next.js слой интерфейса: собирает рабочее пространство, экран данных, карточки запусков и сравнение результатов.',
     responsibilities: ['Workspace', 'Data', 'Backtests', 'Compare'],
+    details: ['Next.js UI + API proxy', 'Strategy upload', 'Charts & visualization'],
     icon: Globe2,
+    skillIcon: 'nextjs',
   },
   {
-    title: 'Java API',
-    sourceName: 'backend/java',
-    description: 'Spring Boot принимает REST-запросы, управляет lifecycle, читает свечи и сохраняет результат.',
+    title: 'Backend',
+    sourceName: 'backend',
+    description: 'Spring Boot API принимает REST-запросы, управляет lifecycle запусков, читает свечи и сохраняет артефакты.',
     responsibilities: ['Controllers', 'DTO', 'BacktestService', 'Repositories'],
+    details: ['Dataset API', 'Strategy management', 'Run control'],
     icon: ServerCog,
+    skillIcon: 'spring',
   },
   {
-    title: 'Python Engine',
-    sourceName: 'backend/python',
-    description: 'Python выполняет расчет стратегии на CSV-данных и возвращает JSON с артефактами.',
+    title: 'Backend',
+    sourceName: 'backend',
+    description: 'Python parser/backtesting service готовит данные, запускает стратегии, считает индикаторы и возвращает JSON.',
     responsibilities: ['Parser', 'Strategy Runner', 'Backtesting', 'Indicators'],
+    details: ['Exchange adapters', 'CSV processing', 'Metrics, trades, equity'],
     icon: TerminalSquare,
+    skillIcon: 'python',
   },
   {
-    title: 'PostgreSQL',
-    sourceName: 'PostgreSQL',
+    title: 'DataBase',
+    sourceName: 'database',
     description: 'База хранит стратегии, свечи, запуски, сделки и точки кривой капитала.',
     responsibilities: ['candles', 'runs', 'backtest_trades', 'backtest_equity_points'],
+    details: ['OHLCV storage', 'Run artifacts', 'Relational links by run_id'],
     icon: Database,
+    skillIcon: 'postgresql',
   },
 ]
 
@@ -154,6 +178,10 @@ export const dataFlowSteps: FlowStep[] = [
   {
     title: 'POST /backtests',
     description: 'Клиент передает стратегию, рынок, interval, период, параметры и настройки исполнения.',
+  },
+  {
+    title: 'Validate request',
+    description: 'Backend проверяет стратегию, временной диапазон, параметры капитала, комиссии и доступность данных.',
   },
   {
     title: 'PENDING -> RUNNING',
@@ -168,6 +196,10 @@ export const dataFlowSteps: FlowStep[] = [
     description: 'PythonBacktestExecutor передает JSON через stdin и читает stdout/stderr.',
   },
   {
+    title: 'Strategy execution',
+    description: 'Python engine применяет стратегию к подготовленным свечам, считает сделки, PnL, комиссии и equity.',
+  },
+  {
     title: 'Persist artifacts',
     description: 'summary сохраняется в metrics_json, сделки в backtest_trades, equity в backtest_equity_points.',
   },
@@ -177,12 +209,9 @@ export const dataFlowSteps: FlowStep[] = [
   },
 ]
 
-export const quickStartSnippet = `cd site
-npm install
-npm run dev
-
-# docs: http://localhost:5173/docs
-# home: http://localhost:5173`
+export const quickStartSnippet = `git clone https://github.com/Trade360Lab/Trade360Lab.git
+cd Trade360Lab
+docker compose up --build`
 
 export const backtestStatuses: BacktestStatus[] = [
   {
@@ -300,61 +329,106 @@ export const dataEntities: DataEntity[] = [
     description: 'Главная таблица запусков и их lifecycle.',
     fields: ['id', 'strategy_id', 'status', 'exchange', 'symbol', 'interval', 'date_from', 'date_to', 'params_json', 'metrics_json', 'error_message', 'created_at', 'started_at', 'finished_at'],
     notes: ['Идентичность и статус запуска.', 'Запрос в params_json.', 'Summary результата в metrics_json.', 'Текст ошибки в error_message.'],
+    details: [
+      { label: 'Роль', value: 'центр агрегации: к нему привязаны сделки, equity curve, параметры и итоговые метрики' },
+      { label: 'Статусы', value: 'PENDING, RUNNING, COMPLETED, FAILED' },
+      { label: 'JSON', value: 'params_json хранит входные параметры, metrics_json хранит итоговый summary' },
+    ],
   },
   {
     name: 'backtest_trades',
     description: 'Сделки конкретного запуска.',
     fields: ['id', 'run_id', 'entry_time', 'exit_time', 'entry_price', 'exit_price', 'quantity', 'pnl', 'fee'],
     notes: ['run_id -> runs.id.'],
+    details: [
+      { label: 'Назначение', value: 'детализация входа и выхода из позиции для последующего анализа результата' },
+      { label: 'Расчет', value: 'pnl и fee приходят из Python engine и сохраняются как артефакт запуска' },
+      { label: 'Связь', value: 'каждая сделка принадлежит одному run и очищается вместе с ним на уровне сервиса' },
+    ],
   },
   {
     name: 'backtest_equity_points',
     description: 'Точки кривой капитала.',
     fields: ['id', 'run_id', 'timestamp', 'equity'],
     notes: ['run_id -> runs.id.'],
+    details: [
+      { label: 'Назначение', value: 'построение equity curve и сравнение динамики капитала между запусками' },
+      { label: 'Гранулярность', value: 'timestamp соответствует времени точки, рассчитанной движком бэктеста' },
+      { label: 'Потребитель', value: 'frontend использует массив точек для графиков и визуального сравнения' },
+    ],
   },
   {
     name: 'candles',
     description: 'OHLCV-данные, из которых выполняется бэктест.',
     fields: ['exchange', 'symbol', 'interval', 'open_time', 'close_time', 'open', 'high', 'low', 'close', 'volume'],
     notes: ['BacktestService читает исходные свечи из этой таблицы.'],
+    details: [
+      { label: 'Источник', value: 'рыночные OHLCV-данные по exchange, symbol и interval' },
+      { label: 'Фильтр', value: 'Java API выбирает диапазон open_time между from и to перед передачей в Python' },
+      { label: 'Строгость', value: 'strictData позволяет остановить запуск при недостаточных или некорректных данных' },
+    ],
   },
 ]
 
 export const launchGuide: LaunchGroup[] = [
   {
-    title: 'Сервисы',
-    items: ['Vite dev-сервер обслуживает лендинг и /docs.', 'Production-сборка собирается в site/dist/.', 'Nginx-контейнер из infra/docker/Dockerfile раздает готовую статику.'],
+    title: 'Вариант A',
+    items: ['Весь стек в Docker', 'Рекомендуемый быстрый старт из README', 'Одна команда поднимает frontend, Java API, Python service и PostgreSQL'],
   },
   {
-    title: 'Конфигурация',
-    items: ['При необходимости скопируйте site/.env.example в site/.env.local.', 'VITE_REPOSITORY_URL задает ссылку для кнопки View Repository.', 'Для /docs отдельные переменные окружения не требуются.'],
-  },
-  {
-    title: 'Разработка',
-    items: ['Установите зависимости в site/.', 'Запустите npm run dev.', 'Откройте /docs напрямую: http://localhost:5173/docs.'],
-  },
-  {
-    title: 'Production',
-    items: ['Соберите статику командой npm run build.', 'Проверьте результат через npm run preview.', 'Для контейнера используйте Dockerfile из infra/docker.'],
-  },
-  {
-    title: 'Проверка',
-    items: ['Главная страница открывается на корневом URL.', '/docs открывается только по прямому пути.', 'Навигация разделов и копирование code blocks работают без ошибок в консоли.'],
+    title: 'Вариант B',
+    items: ['Локальная разработка по сервисам', 'Frontend запускается отдельно', 'Python parser и Java API стартуют из своих каталогов'],
   },
 ]
 
-export const qualityCommands = `cd site
-npm run build
+export const launchPorts: LaunchPort[] = [
+  { service: 'Frontend', url: 'http://localhost:3000', env: 'FRONTEND_HOST_PORT' },
+  { service: 'Java API', url: 'http://localhost:18080', env: 'JAVA_API_HOST_PORT' },
+  { service: 'Python parser', url: 'http://localhost:18000', env: 'PYTHON_PARSER_HOST_PORT' },
+  { service: 'PostgreSQL', url: 'localhost:55432', env: 'POSTGRES_HOST_PORT' },
+]
 
-docker build -f infra/docker/Dockerfile -t trade360lab-landing .
-docker run --rm -p 4173:80 trade360lab-landing`
+export const launchLocalServices: LaunchLocalService[] = [
+  {
+    title: 'Frontend',
+    path: 'frontend',
+    command: 'npm install && npm run dev',
+    detail: 'Next.js интерфейс, workspace, data screen, backtests, cards и compare.',
+  },
+  {
+    title: 'Python parser',
+    path: 'backend/python',
+    command: 'uvicorn parser.main:app --host 0.0.0.0 --port 8000',
+    detail: 'Parser/import и backtesting service после установки requirements.txt в virtualenv.',
+  },
+  {
+    title: 'Java API',
+    path: 'backend/java',
+    command: 'mvn spring-boot:run',
+    detail: 'Spring Boot слой REST API, lifecycle запусков и интеграция с PostgreSQL/Python.',
+  },
+]
 
-export const runtimeCommands = `cd site
-npm run preview
+export const qualityCommands = `docker compose up --build
 
-# preview: http://localhost:4173
-# docs:    http://localhost:4173/docs`
+# services:
+# frontend:      http://localhost:3000
+# java api:      http://localhost:18080
+# python parser: http://localhost:18000
+# postgresql:    localhost:55432`
+
+export const runtimeCommands = `cd frontend
+npm install
+npm run dev
+
+cd ../backend/python
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn parser.main:app --host 0.0.0.0 --port 8000
+
+cd ../java
+mvn spring-boot:run`
 
 export const statusIcons = {
   idle: CircleDashed,

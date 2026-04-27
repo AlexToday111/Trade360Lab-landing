@@ -11,15 +11,15 @@ import {
   endpoints,
   errorResponseSnippet,
   launchGuide,
+  launchLocalServices,
+  launchPorts,
   navigationItems,
-  overviewCards,
   projectDescription,
   qualityCommands,
   quickStartSnippet,
   repositoryTree,
   runtimeCommands,
   statusIcons,
-  systemFlow,
   type ApiMethod,
   type Endpoint,
   type SectionId,
@@ -71,7 +71,17 @@ const darkTheme = {
   titleMain: 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]',
 }
 
-function CodePanel({ title, code, compact = false }: { title: string; code: string; compact?: boolean }) {
+function CodePanel({
+  title,
+  code,
+  compact = false,
+  dense = false,
+}: {
+  title: string
+  code: string
+  compact?: boolean
+  dense?: boolean
+}) {
   const [copied, setCopied] = useState(false)
 
   const copyCode = async () => {
@@ -86,18 +96,18 @@ function CodePanel({ title, code, compact = false }: { title: string; code: stri
 
   return (
     <div className="overflow-hidden rounded-lg border border-current/10 bg-black/52 text-white">
-      <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-2.5">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#c8f24a]">{title}</p>
+      <div className={`flex items-center justify-between gap-3 border-b border-white/10 px-4 ${dense ? 'py-2' : 'py-2.5'}`}>
+        <p className={`${dense ? 'text-[11px]' : 'text-xs'} font-bold uppercase tracking-[0.18em] text-[#c8f24a]`}>{title}</p>
         <button
           type="button"
           onClick={copyCode}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-white/10 text-white/70 hover:text-[#c8f24a]"
+          className={`${dense ? 'h-7 w-7' : 'h-8 w-8'} inline-flex items-center justify-center rounded-md border border-white/10 text-white/70 hover:text-[#c8f24a]`}
           aria-label={`Скопировать ${title}`}
         >
           {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
         </button>
       </div>
-      <pre className={`scrollbar-hidden overflow-x-auto px-4 py-3 text-xs leading-6 text-[#dce8c2] ${compact ? 'max-h-44' : 'max-h-72'}`}>
+      <pre className={`scrollbar-hidden overflow-auto px-4 text-xs text-[#dce8c2] ${dense ? 'max-h-24 py-1.5 leading-4' : `py-3 leading-6 ${compact ? 'max-h-44' : 'max-h-72'}`}`}>
         <code>{code}</code>
       </pre>
     </div>
@@ -154,9 +164,9 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
         <header className={`mb-3 rounded-lg border px-4 py-3 backdrop-blur-xl ${theme.panel}`}>
           <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#c8f24a]/30 bg-black/10 p-1.5 dark:bg-white/5">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center p-0.5">
                 <img
-                  src="/YellowLogo.png"
+                  src={isLightTheme ? '/BlackLogo.png' : '/GreenLogo.png'}
                   alt="Project logo"
                   className="h-full w-full object-contain"
                   loading="eager"
@@ -172,7 +182,7 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
                   key={item.id}
                   type="button"
                   onClick={() => setActiveSection(item.id)}
-                  className={`whitespace-nowrap rounded-lg border px-3 py-2 text-sm font-semibold transition-colors duration-150 ${
+                  className={`inline-flex w-40 shrink-0 items-center justify-center whitespace-nowrap rounded-lg border px-3 py-2 text-sm font-semibold transition-colors duration-150 ${
                     activeSection === item.id
                       ? 'border-[#c8f24a] bg-[#c8f24a] text-black shadow-[0_0_24px_rgba(200,242,74,0.24)]'
                       : `${theme.pill} hover:border-[#c8f24a] hover:text-[#8faa22] dark:hover:text-[#c8f24a]`
@@ -234,7 +244,9 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
                 {activeSection === 'overview' ? (
                   <OverviewView onSelect={setActiveSection} theme={theme} />
                 ) : null}
-                {activeSection === 'architecture' ? <ArchitectureView theme={theme} /> : null}
+                {activeSection === 'architecture' ? (
+                  <ArchitectureView isLightTheme={isLightTheme} theme={theme} />
+                ) : null}
                 {activeSection === 'api' ? <ApiView theme={theme} /> : null}
                 {activeSection === 'lifecycle' ? <LifecycleView theme={theme} /> : null}
                 {activeSection === 'data-model' ? <DataModelView theme={theme} /> : null}
@@ -255,59 +267,93 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
 
 function OverviewView({ onSelect, theme }: { onSelect: (section: SectionId) => void; theme: typeof lightTheme }) {
   return (
-    <div className="grid h-full min-h-0 gap-3 xl:grid-cols-[1fr_0.82fr]">
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-        {overviewCards.map((card) => {
-          const Icon = card.icon
-          return (
-            <button
-              key={card.id}
-              type="button"
-              onClick={() => onSelect(card.id)}
-              className={`group rounded-lg border p-4 text-left transition-colors duration-150 hover:border-[#c8f24a] ${theme.panel}`}
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#c8f24a]/12 text-[#8faa22] dark:text-[#c8f24a]">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="font-bold">{card.title}</h3>
-                  <p className={`mt-1 text-sm leading-5 ${theme.muted}`}>{card.description}</p>
-                </div>
-                <ArrowRight className="ml-auto h-4 w-4 shrink-0 self-center opacity-50 transition-transform group-hover:translate-x-1" />
-              </div>
-            </button>
-          )
-        })}
-      </div>
-      <div className={`rounded-lg border p-4 ${theme.panel}`}>
-        <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#8faa22] dark:text-[#c8f24a]">
-          Структура репозитория
-        </p>
-        <pre className="scrollbar-hidden mt-3 overflow-x-auto rounded-lg border border-[#c8f24a]/24 bg-black/70 p-4 text-xs leading-6 text-[#dce8c2] shadow-[0_16px_36px_rgba(0,0,0,0.18)]">
-          <code>{repositoryTree}</code>
-        </pre>
-        <div className="mt-3 grid gap-2">
-          {systemFlow.map((step, index) => (
-            <div key={step.title}>
-              <div className="rounded-lg border border-[#c8f24a]/24 bg-black/70 px-4 py-3 text-center text-white shadow-[0_16px_36px_rgba(0,0,0,0.18)]">
-                <p className="text-sm font-bold text-[#c8f24a]">{step.title}</p>
-                <p className="mt-1 text-xs leading-5 text-white/72">{step.detail}</p>
-              </div>
-              {index < systemFlow.length - 1 ? (
-                <div className="flex h-7 items-center justify-center text-[#8faa22] dark:text-[#c8f24a]">
-                  <ArrowRight className="h-4 w-4 rotate-90" />
-                </div>
-              ) : null}
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className="h-full min-h-0">
+      <OverviewMermaidDiagram onSelect={onSelect} theme={theme} />
     </div>
   )
 }
 
-function ArchitectureView({ theme }: { theme: typeof lightTheme }) {
+function OverviewMermaidDiagram({
+  onSelect,
+  theme,
+}: {
+  onSelect: (section: SectionId) => void
+  theme: typeof lightTheme
+}) {
+  const nodeClass =
+    'rounded-lg border border-[#c8f24a]/32 bg-black/50 px-4 py-3 text-center text-white shadow-[0_14px_30px_rgba(0,0,0,0.16)] transition-colors duration-150 hover:border-[#c8f24a]/70 hover:bg-black/58'
+  const accentBaseClass =
+    'rounded-lg border bg-black/50 px-4 py-3 text-center shadow-[0_14px_30px_rgba(0,0,0,0.16)] transition-transform duration-150 hover:-translate-y-0.5'
+
+  return (
+    <div className="grid h-full min-h-0 content-center gap-4 rounded-lg border border-current/10 bg-white/18 p-4 shadow-[0_20px_46px_rgba(31,39,29,0.04)] dark:bg-black/8">
+      <div className="grid items-center gap-3 xl:grid-cols-[1fr_34px_1fr_34px_1fr]">
+        <button type="button" onClick={() => onSelect('overview')} className={`${nodeClass} min-h-24`}>
+          <p className="text-base font-black">Trade360Lab</p>
+          <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/68">
+            Quantitative Trading Lab
+          </p>
+        </button>
+        <ArrowRight className="mx-auto h-5 w-5 rotate-90 text-[#8faa22] dark:text-[#c8f24a] xl:rotate-0" />
+        <div className="grid gap-3">
+          <button type="button" onClick={() => onSelect('overview')} className={`${nodeClass} min-h-20`}>
+            <p className="font-bold">Landing</p>
+            <p className="mt-1 text-xs leading-5 text-white/68">Website</p>
+          </button>
+          <div className={`${nodeClass} min-h-20`}>
+            <p className="font-bold">GitHub</p>
+            <p className="mt-1 text-xs leading-5 text-white/68">Organization</p>
+          </div>
+        </div>
+        <ArrowRight className="mx-auto h-5 w-5 rotate-90 text-[#8faa22] dark:text-[#c8f24a] xl:rotate-0" />
+        <div className="grid gap-3">
+          <a
+            href="https://github.com/Trade360Lab/Trade360Lab.git"
+            target="_blank"
+            rel="noreferrer"
+            className={`${nodeClass} min-h-20`}
+          >
+            <p className="font-bold">Main Repo</p>
+            <p className="mt-1 text-xs leading-5 text-white/68">Trade360Lab</p>
+          </a>
+          <a
+            href="https://github.com/Trade360Lab/Trade360Lab-Strategies.git"
+            target="_blank"
+            rel="noreferrer"
+            className={`${accentBaseClass} min-h-20 border-[#00C2FF] text-[#00C2FF] hover:shadow-[0_0_24px_rgba(0,194,255,0.2)]`}
+          >
+            <p className="font-bold">Strategies Repo</p>
+            <p className="mt-1 text-xs leading-5 text-[#00C2FF]/70">Trade360Lab-Strategies</p>
+          </a>
+        </div>
+      </div>
+      <div className="grid items-start gap-3 xl:grid-cols-[1fr_34px_1fr]">
+        <div className="hidden xl:block" />
+        <div className="hidden xl:block" />
+        <div className="grid gap-3">
+          <a
+            href="https://github.com/Trade360Lab/Trade360Lab-Analyzer-BTC.git"
+            target="_blank"
+            rel="noreferrer"
+            className={`${accentBaseClass} min-h-20 border-[#FFFF00] text-[#FFFF00] hover:shadow-[0_0_24px_rgba(255,255,0,0.2)]`}
+          >
+            <p className="font-bold">BTC Analyzer Bot</p>
+            <p className="mt-1 text-xs leading-5 text-[#FFFF00]/70">GitHub repository</p>
+          </a>
+        </div>
+      </div>
+      <pre className="sr-only">{`flowchart LR
+    A["Trade360Lab<br/>Quantitative Trading Lab"]
+    A --> B["Landing<br/>Website"]
+    A --> C["GitHub<br/>Organization"]
+    C --> D["Main Repo<br/>Trade360Lab"]
+    C --> E["Strategies Repo<br/>Trade360Lab-Strategies"]
+    C --> G["BTC Analyzer Bot"]`}</pre>
+    </div>
+  )
+}
+
+function ArchitectureView({ isLightTheme, theme }: { isLightTheme: boolean; theme: typeof lightTheme }) {
   return (
     <div className="grid h-full min-h-0 gap-3 xl:grid-cols-[1fr_0.9fr]">
       <div className="grid gap-3 sm:grid-cols-2">
@@ -316,15 +362,28 @@ function ArchitectureView({ theme }: { theme: typeof lightTheme }) {
           return (
             <div key={layer.title} className={`rounded-lg border p-4 ${theme.panel}`}>
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#c8f24a]/12 text-[#8faa22] dark:text-[#c8f24a]">
-                  <Icon className="h-5 w-5" />
+                <div className="flex h-10 w-10 items-center justify-center">
+                  <img
+                    src={`https://go-skill-icons.vercel.app/api/icons?i=${layer.skillIcon}&theme=${isLightTheme ? 'light' : 'dark'}`}
+                    alt=""
+                    className="h-9 w-9 object-contain"
+                    loading="lazy"
+                  />
                 </div>
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-55">{layer.sourceName}</p>
                   <h3 className="font-bold">{layer.title}</h3>
                 </div>
+                <Icon className="ml-auto h-4 w-4 opacity-35" />
               </div>
               <p className={`mt-3 text-sm leading-6 ${theme.muted}`}>{layer.description}</p>
+              <div className="mt-3 grid gap-1.5">
+                {layer.details.map((detail) => (
+                  <div key={detail} className={`rounded-md border px-2.5 py-1.5 text-xs leading-5 ${theme.pill}`}>
+                    {detail}
+                  </div>
+                ))}
+              </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {layer.responsibilities.map((item) => (
                   <span key={item} className={`rounded-md border px-2 py-1 text-xs ${theme.pill}`}>
@@ -336,22 +395,32 @@ function ArchitectureView({ theme }: { theme: typeof lightTheme }) {
           )
         })}
       </div>
-      <div className={`rounded-lg border p-4 ${theme.panel}`}>
-        <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-[#8faa22] dark:text-[#c8f24a]">
-          Поток данных
-        </p>
-        <div className="mt-3 grid gap-2">
-          {dataFlowSteps.slice(0, 5).map((step, index) => (
-            <div key={step.title} className={`grid grid-cols-[34px_1fr] gap-3 rounded-lg border p-3 ${theme.pill}`}>
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#c8f24a] text-xs font-black text-black">
-                {index + 1}
+      <div className="grid min-h-0 gap-3">
+        <div className={`rounded-lg border p-3 ${theme.panel}`}>
+          <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#8faa22] dark:text-[#c8f24a]">
+            Поток данных
+          </p>
+          <div className="mt-3 grid max-h-[33rem] gap-2 overflow-y-auto pr-1">
+            {dataFlowSteps.map((step, index) => (
+              <div key={step.title} className={`grid grid-cols-[28px_1fr] gap-2 rounded-lg border p-2.5 ${theme.pill}`}>
+                <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#c8f24a] text-[11px] font-black text-black">
+                  {index + 1}
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold">{step.title}</h4>
+                  <p className="mt-0.5 text-[11px] leading-4 opacity-75">{step.description}</p>
+                </div>
               </div>
-              <div>
-                <h4 className="text-sm font-bold">{step.title}</h4>
-                <p className="mt-1 text-xs leading-5 opacity-75">{step.description}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+        <div className={`rounded-lg border p-3 ${theme.panel}`}>
+          <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#8faa22] dark:text-[#c8f24a]">
+            Структура репозитория
+          </p>
+          <pre className="scrollbar-hidden mt-3 overflow-x-auto rounded-lg border border-[#c8f24a]/24 bg-black/70 p-3 text-[11px] leading-5 text-[#dce8c2] shadow-[0_16px_36px_rgba(0,0,0,0.18)]">
+            <code>{repositoryTree}</code>
+          </pre>
         </div>
       </div>
     </div>
@@ -380,36 +449,41 @@ function ApiView({ theme }: { theme: typeof lightTheme }) {
   }
 
   return (
-    <div className="grid h-full min-h-0 gap-3 xl:grid-cols-[0.9fr_1.1fr]">
+    <div className="grid h-full min-h-0 gap-3 xl:grid-cols-[0.82fr_1.18fr]">
       <div className="grid min-h-0 gap-2">
-        <div className="scrollbar-hidden flex gap-2 overflow-x-auto pb-1" aria-label="HTTP методы">
-          {apiMethods.map((method) => {
-            const nextEndpoints = endpoints.filter((endpoint) => endpoint.method === method.id)
-            const isActive = activeMethod === method.id
-            const isDisabled = nextEndpoints.length === 0
+        <div className={`rounded-lg border p-2.5 ${theme.panel}`}>
+          <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#8faa22] dark:text-[#c8f24a]">
+            HTTP endpoints
+          </p>
+          <div className="scrollbar-hidden mt-2 flex gap-1.5 overflow-x-auto" aria-label="HTTP методы">
+            {apiMethods.map((method) => {
+              const nextEndpoints = endpoints.filter((endpoint) => endpoint.method === method.id)
+              const isActive = activeMethod === method.id
+              const isDisabled = nextEndpoints.length === 0
 
-            return (
-              <button
-                key={method.id}
-                type="button"
-                onClick={() => selectMethod(method.id, nextEndpoints)}
-                disabled={isDisabled}
-                className={`whitespace-nowrap rounded-lg border px-3 py-2 text-xs font-black transition-colors ${
-                  isActive
-                    ? `${methodStyles[method.id]} shadow-[0_0_22px_rgba(200,242,74,0.16)]`
-                    : isDisabled
-                      ? 'border-current/10 bg-current/[0.03] opacity-45'
-                      : `${theme.pill} hover:border-[#c8f24a]`
-                }`}
-              >
-                {method.label}
-                <span className="ml-2 opacity-60">{nextEndpoints.length}</span>
-              </button>
-            )
-          })}
+              return (
+                <button
+                  key={method.id}
+                  type="button"
+                  onClick={() => selectMethod(method.id, nextEndpoints)}
+                  disabled={isDisabled}
+                  className={`h-7 whitespace-nowrap rounded-md border px-2.5 text-[11px] font-black leading-none transition-colors ${
+                    isActive
+                      ? `${methodStyles[method.id]} shadow-[0_0_16px_rgba(200,242,74,0.14)]`
+                      : isDisabled
+                        ? 'border-current/10 bg-current/[0.03] opacity-45'
+                        : `${theme.pill} hover:border-[#c8f24a]`
+                  }`}
+                >
+                  {method.label}
+                  <span className="ml-1.5 opacity-60">{nextEndpoints.length}</span>
+                </button>
+              )
+            })}
+          </div>
         </div>
 
-        <div className="scrollbar-hidden grid max-h-[42vh] gap-2 overflow-y-auto pr-1 xl:max-h-none">
+        <div className="scrollbar-hidden grid max-h-56 gap-2 overflow-y-auto pr-1">
           {methodEndpoints.map((endpoint) => {
             const isSelected = selectedEndpoint?.path === endpoint.path
 
@@ -418,7 +492,7 @@ function ApiView({ theme }: { theme: typeof lightTheme }) {
                 key={`${endpoint.method}-${endpoint.path}`}
                 type="button"
                 onClick={() => setSelectedEndpointPath(endpoint.path)}
-                className={`rounded-lg border p-3 text-left transition-colors ${
+                className={`h-[72px] overflow-hidden rounded-lg border p-3 text-left transition-colors ${
                   isSelected ? 'border-[#c8f24a] bg-[#c8f24a]/10' : theme.panel
                 }`}
               >
@@ -426,7 +500,7 @@ function ApiView({ theme }: { theme: typeof lightTheme }) {
                   <MethodBadge method={endpoint.method} />
                   <div>
                     <p className="font-mono text-sm font-bold">{endpoint.path}</p>
-                    <p className={`mt-1 text-xs leading-5 ${theme.muted}`}>{endpoint.description}</p>
+                    <p className={`mt-1 line-clamp-1 text-xs leading-5 ${theme.muted}`}>{endpoint.description}</p>
                   </div>
                 </div>
               </button>
@@ -439,22 +513,26 @@ function ApiView({ theme }: { theme: typeof lightTheme }) {
           ) : null}
         </div>
 
-        <div className={`rounded-lg border p-3 text-sm leading-6 ${theme.pill}`}>
-          Ошибки возвращаются в JSON. При некорректном запросе документация фиксирует формат с
-          timestamp, status, error, message и path.
-        </div>
+        {selectedEndpoint ? (
+          <div className={`rounded-lg border p-3 ${theme.panel}`}>
+            <div className="flex flex-wrap items-center gap-2">
+              <MethodBadge method={selectedEndpoint.method} />
+              <span className="font-mono text-sm font-bold">{selectedEndpoint.path}</span>
+            </div>
+            <p className={`mt-1 line-clamp-1 text-xs leading-5 ${theme.muted}`}>{selectedEndpoint.description}</p>
+          </div>
+        ) : null}
       </div>
       <div className="grid min-h-0 gap-3">
         {selectedEndpoint ? (
           <>
-            <div className={`rounded-lg border p-3 ${theme.panel}`}>
-              <div className="flex flex-wrap items-center gap-2">
-                <MethodBadge method={selectedEndpoint.method} />
-                <span className="font-mono text-sm font-bold">{selectedEndpoint.path}</span>
+            <div className={`rounded-lg border p-2 text-[11px] leading-4 ${theme.pill}`}>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <p className="font-bold text-[#8faa22] dark:text-[#c8f24a]">Ошибки API</p>
+                <p>JSON: timestamp, status, error, message и path.</p>
               </div>
-              <p className={`mt-2 text-sm leading-6 ${theme.muted}`}>{selectedEndpoint.description}</p>
             </div>
-            <div className="grid gap-3 lg:grid-cols-2">
+            <div className="grid items-start gap-3 lg:grid-cols-2">
               {selectedEndpoint.request ? (
                 <CodePanel
                   title={`${selectedEndpoint.method} ${selectedEndpoint.path} запрос`}
@@ -466,8 +544,9 @@ function ApiView({ theme }: { theme: typeof lightTheme }) {
                 title={`${selectedEndpoint.method} ${selectedEndpoint.path} ответ`}
                 code={selectedEndpoint.response}
                 compact
+                dense
               />
-              <CodePanel title="Ошибка API" code={errorResponseSnippet} compact />
+              <CodePanel title="Ошибка API" code={errorResponseSnippet} compact dense />
             </div>
           </>
         ) : null}
@@ -527,6 +606,14 @@ function DataModelView({ theme }: { theme: typeof lightTheme }) {
               </span>
             ))}
           </div>
+          <div className="mt-3 grid gap-2">
+            {entity.details.map((detail) => (
+              <div key={detail.label} className={`rounded-md border px-3 py-2 ${theme.pill}`}>
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] opacity-55">{detail.label}</p>
+                <p className="mt-1 text-xs leading-5">{detail.value}</p>
+              </div>
+            ))}
+          </div>
           <div className="mt-3 grid gap-1.5">
             {entity.notes.map((note) => (
               <div key={note} className={`flex items-start gap-2 text-xs leading-5 ${theme.muted}`}>
@@ -543,29 +630,65 @@ function DataModelView({ theme }: { theme: typeof lightTheme }) {
 
 function LaunchView({ theme }: { theme: typeof lightTheme }) {
   return (
-    <div className="grid h-full min-h-0 gap-3 xl:grid-cols-[1fr_1fr]">
-      <div className="grid gap-3 sm:grid-cols-2">
-        {launchGuide.map((group) => (
-          <div key={group.title} className={`rounded-lg border p-3 ${theme.panel}`}>
-            <div className="flex items-center gap-2">
-              <Rocket className="h-4 w-4 text-[#8faa22] dark:text-[#c8f24a]" />
-              <h3 className="font-bold">{group.title}</h3>
-            </div>
-            <div className="mt-2 grid gap-1.5">
-              {group.items.map((item) => (
-                <div key={item} className={`flex items-start gap-2 text-xs leading-5 ${theme.muted}`}>
-                  <span className="mt-1 h-3 w-3 shrink-0 rounded-sm border border-[#8faa22] dark:border-[#c8f24a]" />
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
+    <div className="grid h-full min-h-0 gap-3 xl:grid-cols-[0.95fr_1.05fr]">
+      <div className="grid min-h-0 gap-3">
+        <div className={`rounded-lg border p-4 ${theme.panel}`}>
+          <div className="flex items-center gap-2">
+            <Rocket className="h-5 w-5 text-[#8faa22] dark:text-[#c8f24a]" />
+            <h3 className="text-lg font-bold">README quick start</h3>
           </div>
-        ))}
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            {launchGuide.map((group) => (
+              <div key={group.title} className={`rounded-lg border p-3 ${theme.pill}`}>
+                <p className="text-xs font-black uppercase tracking-[0.18em] opacity-60">{group.title}</p>
+                <h4 className="mt-1 font-bold">{group.items[0]}</h4>
+                <p className="mt-2 text-xs leading-5 opacity-78">{group.items[1]}</p>
+                <p className="mt-1 text-xs leading-5 opacity-78">{group.items[2]}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className={`rounded-lg border p-4 ${theme.panel}`}>
+          <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#8faa22] dark:text-[#c8f24a]">
+            Сервисы и порты
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {launchPorts.map((port) => (
+              <div key={port.service} className={`rounded-lg border p-3 ${theme.pill}`}>
+                <p className="font-bold">{port.service}</p>
+                <p className="mt-1 font-mono text-xs">{port.url}</p>
+                <p className="mt-1 text-[11px] leading-4 opacity-60">{port.env}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className={`rounded-lg border p-4 ${theme.panel}`}>
+          <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#8faa22] dark:text-[#c8f24a]">
+            Локальный режим
+          </p>
+          <div className="mt-3 grid gap-2">
+            {launchLocalServices.map((service) => (
+              <div key={service.title} className={`rounded-lg border p-3 ${theme.pill}`}>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="font-bold">{service.title}</p>
+                  <span className="rounded-md bg-black/70 px-2 py-1 font-mono text-[11px] text-[#dce8c2] dark:bg-white/10">
+                    {service.path}
+                  </span>
+                </div>
+                <p className="mt-2 font-mono text-xs leading-5">{service.command}</p>
+                <p className="mt-1 text-xs leading-5 opacity-70">{service.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-      <div className="grid gap-3">
-        <CodePanel title="Быстрый старт" code={quickStartSnippet} compact />
-        <CodePanel title="Сборка и Docker" code={qualityCommands} compact />
-        <CodePanel title="Preview" code={runtimeCommands} compact />
+
+      <div className="grid min-h-0 gap-3">
+        <CodePanel title="Docker: весь стек" code={quickStartSnippet} compact />
+        <CodePanel title="Порты из README" code={qualityCommands} compact />
+        <CodePanel title="Локальная разработка" code={runtimeCommands} compact />
       </div>
     </div>
   )

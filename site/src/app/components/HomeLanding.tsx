@@ -1,5 +1,5 @@
-import { Github, Info } from 'lucide-react'
-import { motion } from 'motion/react'
+import { BookOpen, Github, Info } from 'lucide-react'
+import { motion, useReducedMotion } from 'motion/react'
 import { useState } from 'react'
 import { AboutProjectModal } from './AboutProjectModal'
 import { OrbitalSystem } from './OrbitalSystem'
@@ -70,7 +70,12 @@ const darkTheme = {
 
 export function HomeLanding({ isLightTheme, repositoryUrl }: HomeLandingProps) {
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
+  const shouldReduceMotion = useReducedMotion()
   const theme = isLightTheme ? lightTheme : darkTheme
+  const entranceTransition = shouldReduceMotion
+    ? { duration: 0.01 }
+    : { duration: 0.8, ease: 'easeOut' as const }
+  const buttonHover = shouldReduceMotion ? undefined : { y: -2 }
 
   return (
     <div className={`relative min-h-screen w-full overflow-hidden ${theme.container}`}>
@@ -111,15 +116,15 @@ export function HomeLanding({ isLightTheme, repositoryUrl }: HomeLandingProps) {
 
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: 'easeOut' }}
+          transition={entranceTransition}
           className="relative mb-6"
         >
           <motion.div
             className={`absolute inset-0 bg-[#c8f24a] ${theme.titleGlow}`}
-            animate={{ opacity: [0.2, 0.4, 0.2] }}
-            transition={{ duration: 3, ease: 'easeInOut', repeat: Number.POSITIVE_INFINITY }}
+            animate={shouldReduceMotion ? undefined : { opacity: [0.18, 0.32, 0.18] }}
+            transition={{ duration: 4.5, ease: 'easeInOut', repeat: Number.POSITIVE_INFINITY }}
           />
 
           <div className="relative">
@@ -134,17 +139,17 @@ export function HomeLanding({ isLightTheme, repositoryUrl }: HomeLandingProps) {
 
             <motion.div
               className={`-mt-6 h-[2px] bg-gradient-to-r from-transparent ${theme.titleLine} to-transparent`}
-              initial={{ width: 0 }}
+              initial={shouldReduceMotion ? false : { width: 0 }}
               animate={{ width: '100%' }}
-              transition={{ duration: 1.5, delay: 0.5 }}
+              transition={shouldReduceMotion ? { duration: 0.01 } : { duration: 1.1, delay: 0.35 }}
             />
           </div>
         </motion.div>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
+          transition={shouldReduceMotion ? { duration: 0.01 } : { duration: 0.65, delay: 0.2 }}
           className={`mb-20 max-w-2xl text-center text-xl font-medium uppercase tracking-[0.28em] md:text-[1.4rem] ${theme.subtitle}`}
           style={{
             textShadow: theme.subtitleShadow,
@@ -154,32 +159,45 @@ export function HomeLanding({ isLightTheme, repositoryUrl }: HomeLandingProps) {
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.7 }}
-          className="flex flex-col gap-4 sm:flex-row"
+          transition={shouldReduceMotion ? { duration: 0.01 } : { duration: 0.65, delay: 0.42 }}
+          className="flex w-full max-w-3xl flex-col items-stretch justify-center gap-4 sm:flex-row"
         >
+          <motion.a
+            href="/docs"
+            className={`group relative inline-flex h-14 w-full items-center justify-center overflow-hidden rounded-lg border-2 px-6 font-semibold transition-colors duration-200 sm:w-52 ${theme.secondaryButton}`}
+            whileHover={buttonHover}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+          >
+            <span className="relative flex items-center gap-2">
+              <BookOpen className="h-5 w-5" />
+              Documents
+            </span>
+          </motion.a>
+
           <motion.a
             href={repositoryUrl}
             target="_blank"
             rel="noreferrer"
-            className={`group relative overflow-hidden rounded-lg px-8 py-4 font-semibold transition-all duration-300 ${theme.primaryButton}`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className={`group relative inline-flex h-14 w-full items-center justify-center overflow-hidden rounded-lg px-6 font-semibold transition-colors duration-200 sm:w-52 ${theme.primaryButton}`}
+            whileHover={buttonHover}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+            aria-label="View repository"
+            title="View Repository"
           >
             <div className={`absolute inset-0 bg-[#c8f24a] opacity-0 blur-xl transition-opacity duration-300 ${theme.primaryButtonGlow}`} />
-            <div className="relative flex items-center gap-2">
+            <div className="relative flex items-center justify-center">
               <Github className="h-5 w-5" />
-              <span>View Repository</span>
             </div>
           </motion.a>
 
           <motion.button
             type="button"
             onClick={() => setIsAboutModalOpen(true)}
-            className={`group relative overflow-hidden rounded-lg border-2 px-8 py-4 font-semibold transition-all duration-300 ${theme.secondaryButton}`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className={`group relative inline-flex h-14 w-full items-center justify-center overflow-hidden rounded-lg border-2 px-6 font-semibold transition-colors duration-200 sm:w-52 ${theme.secondaryButton}`}
+            whileHover={buttonHover}
+            whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
           >
             <span className="relative flex items-center gap-2">
               About Project
@@ -189,9 +207,9 @@ export function HomeLanding({ isLightTheme, repositoryUrl }: HomeLandingProps) {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={shouldReduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1 }}
+          transition={shouldReduceMotion ? { duration: 0.01 } : { duration: 0.7, delay: 0.64 }}
           className="mt-20 grid grid-cols-3 gap-8 md:gap-16"
         >
           {stats.map((stat) => (
