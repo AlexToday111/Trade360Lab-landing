@@ -75,7 +75,7 @@ export type LaunchGroup = {
 }
 
 export const projectDescription =
-  'Trade360Lab — лаборатория для разработки, тестирования и подготовки торговых стратегий. Платформа объединяет загрузку рыночных данных, управление стратегиями, запуск бэктестов, анализ результатов и подготовку к paper/live trading в едином рабочем процессе.'
+  'Лаборатория для разработки, тестирования и подготовки торговых стратегий. Платформа объединяет загрузку рыночных данных, управление стратегиями, запуск бэктестов, анализ результатов и подготовку к paper/live trading в едином рабочем процессе.'
 
 export const navigationItems: NavigationItem[] = [
   { id: 'overview', label: 'Обзор' },
@@ -363,7 +363,7 @@ export const statusIcons = {
   danger: ShieldAlert,
 } as const
 
-export const repositoryTree = `Trade360Lab/
+export const repositoryTree = `Project/
 |-- frontend/               # Next.js UI + API proxy
 |-- backend/
 |   |-- java/               # Spring Boot API
@@ -372,9 +372,21 @@ export const repositoryTree = `Trade360Lab/
 |-- .github/workflows/      # CI pipeline
 \`-- docker-compose.yml      # запуск всего стека`
 
-export const systemLayers = [
-  'Frontend обращается к Java backend.',
-  'Java сохраняет runs и читает candles из PostgreSQL.',
-  'Java запускает PythonBacktestExecutor через ProcessBuilder.',
-  'Python возвращает summary, trades и equity_curve в JSON.',
+export const systemFlow = [
+  {
+    title: 'Frontend',
+    detail: 'UI отправляет параметры стратегии, рынка и периода',
+  },
+  {
+    title: 'Java backend',
+    detail: 'создает run, валидирует запрос и читает candles',
+  },
+  {
+    title: 'Python engine',
+    detail: 'исполняет стратегию и рассчитывает сделки',
+  },
+  {
+    title: 'JSON artifacts',
+    detail: 'возвращает summary, trades и equity curve',
+  },
 ]

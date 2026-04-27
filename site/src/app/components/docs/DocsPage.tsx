@@ -19,7 +19,7 @@ import {
   repositoryTree,
   runtimeCommands,
   statusIcons,
-  systemLayers,
+  systemFlow,
   type ApiMethod,
   type Endpoint,
   type SectionId,
@@ -157,13 +157,13 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#c8f24a]/30 bg-black/10 p-1.5 dark:bg-white/5">
                 <img
                   src="/YellowLogo.png"
-                  alt="Trade360Lab"
+                  alt="Project logo"
                   className="h-full w-full object-contain"
                   loading="eager"
                 />
               </div>
               <div>
-                <p className="text-sm font-bold">Documentation</p>
+                <p className="text-base font-bold leading-none sm:text-lg">Documentation</p>
               </div>
             </div>
             <nav className="scrollbar-hidden flex gap-2 overflow-x-auto" aria-label="Разделы документации">
@@ -186,7 +186,7 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
         </header>
 
         <section className="grid min-h-0 flex-1 gap-3 lg:grid-cols-[0.78fr_1.22fr]">
-          <aside className={`hidden min-h-0 flex-col justify-between rounded-lg border p-4 backdrop-blur-xl lg:flex ${theme.panel}`}>
+          <aside className={`hidden h-fit flex-col rounded-lg border p-4 backdrop-blur-xl lg:flex ${theme.panel}`}>
             <div>
               <motion.div
                 initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.98 }}
@@ -209,13 +209,10 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
                   <div className={`mt-1 h-[2px] bg-gradient-to-r from-transparent ${theme.titleLine} to-transparent`} />
                 </div>
               </motion.div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#8faa22] dark:text-[#c8f24a]">
+              <p className="text-[15px] font-bold uppercase tracking-[0.18em] text-[#8faa22] dark:text-[#c8f24a] sm:text-base">
                 {activeLabel}
               </p>
-              <h2 className="mt-2 max-w-xl text-2xl font-black leading-tight sm:text-3xl">
-                Trade360Lab
-              </h2>
-              <p className={`mt-3 max-w-xl text-sm leading-6 ${theme.muted}`}>
+              <p className={`mt-3 max-w-xl text-base font-semibold leading-7 sm:text-lg ${theme.muted}`}>
                 {projectDescription}
               </p>
             </div>
@@ -269,7 +266,7 @@ function OverviewView({ onSelect, theme }: { onSelect: (section: SectionId) => v
               onClick={() => onSelect(card.id)}
               className={`group rounded-lg border p-4 text-left transition-colors duration-150 hover:border-[#c8f24a] ${theme.panel}`}
             >
-              <div className="flex items-start gap-3">
+              <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#c8f24a]/12 text-[#8faa22] dark:text-[#c8f24a]">
                   <Icon className="h-5 w-5" />
                 </div>
@@ -277,23 +274,31 @@ function OverviewView({ onSelect, theme }: { onSelect: (section: SectionId) => v
                   <h3 className="font-bold">{card.title}</h3>
                   <p className={`mt-1 text-sm leading-5 ${theme.muted}`}>{card.description}</p>
                 </div>
-                <ArrowRight className="ml-auto h-4 w-4 shrink-0 opacity-50 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="ml-auto h-4 w-4 shrink-0 self-center opacity-50 transition-transform group-hover:translate-x-1" />
               </div>
             </button>
           )
         })}
       </div>
       <div className={`rounded-lg border p-4 ${theme.panel}`}>
-        <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-[#8faa22] dark:text-[#c8f24a]">
+        <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#8faa22] dark:text-[#c8f24a]">
           Структура репозитория
         </p>
-        <pre className="scrollbar-hidden mt-3 overflow-x-auto rounded-lg bg-black/55 p-4 text-xs leading-6 text-[#dce8c2]">
+        <pre className="scrollbar-hidden mt-3 overflow-x-auto rounded-lg border border-[#c8f24a]/24 bg-black/70 p-4 text-xs leading-6 text-[#dce8c2] shadow-[0_16px_36px_rgba(0,0,0,0.18)]">
           <code>{repositoryTree}</code>
         </pre>
         <div className="mt-3 grid gap-2">
-          {systemLayers.map((item) => (
-            <div key={item} className={`rounded-lg border px-3 py-2 text-sm ${theme.pill}`}>
-              {item}
+          {systemFlow.map((step, index) => (
+            <div key={step.title}>
+              <div className="rounded-lg border border-[#c8f24a]/24 bg-black/70 px-4 py-3 text-center text-white shadow-[0_16px_36px_rgba(0,0,0,0.18)]">
+                <p className="text-sm font-bold text-[#c8f24a]">{step.title}</p>
+                <p className="mt-1 text-xs leading-5 text-white/72">{step.detail}</p>
+              </div>
+              {index < systemFlow.length - 1 ? (
+                <div className="flex h-7 items-center justify-center text-[#8faa22] dark:text-[#c8f24a]">
+                  <ArrowRight className="h-4 w-4 rotate-90" />
+                </div>
+              ) : null}
             </div>
           ))}
         </div>

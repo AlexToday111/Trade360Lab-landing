@@ -22,7 +22,7 @@ export default defineConfig({
         const docsHtml = indexHtml
           .replace(
             /<meta\s+name="description"\s+content="[^"]*"\s*\/>/,
-            '<meta name="description" content="Продуктовая и техническая документация Trade360Lab" />',
+            '<meta name="description" content="Продукт, архитектура, API и запуск проекта." />',
           )
           .replace(/<title>.*?<\/title>/, '<title>Documentation</title>')
         const docsDir = path.join(distDir, 'docs')
