@@ -35,8 +35,15 @@ export type ArchitectureLayer = {
   icon: LucideIcon
 }
 
+export type ApiMethod = 'GET' | 'POST' | 'PUT/PATCH' | 'DELETE'
+
+export type ApiMethodOption = {
+  id: ApiMethod
+  label: string
+}
+
 export type Endpoint = {
-  method: 'GET' | 'POST'
+  method: ApiMethod
   path: string
   description: string
   source: string
@@ -198,6 +205,13 @@ export const backtestStatuses: BacktestStatus[] = [
     tone: 'danger',
     description: 'Ошибка возникла во время подготовки данных, выполнения Python или сохранения результата.',
   },
+]
+
+export const apiMethods: ApiMethodOption[] = [
+  { id: 'GET', label: 'GET' },
+  { id: 'POST', label: 'POST' },
+  { id: 'PUT/PATCH', label: 'PUT/PATCH' },
+  { id: 'DELETE', label: 'DELETE' },
 ]
 
 export const endpoints: Endpoint[] = [

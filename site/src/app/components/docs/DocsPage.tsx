@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 import { OrbitalSystem } from '../OrbitalSystem'
 import {
+  apiMethods,
   architectureLayers,
   backtestStatuses,
   dataEntities,
@@ -18,6 +19,8 @@ import {
   runtimeCommands,
   statusIcons,
   systemLayers,
+  type ApiMethod,
+  type Endpoint,
   type SectionId,
 } from './content'
 
@@ -100,9 +103,16 @@ function CodePanel({ title, code, compact = false }: { title: string; code: stri
   )
 }
 
-function MethodBadge({ method }: { method: 'GET' | 'POST' }) {
+const methodStyles: Record<ApiMethod, string> = {
+  GET: 'bg-[#69d2ff]/18 text-[#0d668a] dark:text-[#9fe8ff] border-[#69d2ff]/35',
+  POST: 'bg-[#c8f24a] text-black border-[#c8f24a]',
+  'PUT/PATCH': 'bg-[#f3b46c]/18 text-[#92571a] dark:text-[#ffd29f] border-[#f3b46c]/35',
+  DELETE: 'bg-[#ff6b6b]/16 text-[#9f2525] dark:text-[#ffb4b4] border-[#ff6b6b]/35',
+}
+
+function MethodBadge({ method }: { method: ApiMethod }) {
   return (
-    <span className={`rounded-md px-2.5 py-1 text-xs font-black ${method === 'POST' ? 'bg-[#c8f24a] text-black' : 'bg-white/12 text-white'}`}>
+    <span className={`rounded-md border px-2.5 py-1 text-xs font-black ${methodStyles[method]}`}>
       {method}
     </span>
   )
@@ -342,38 +352,118 @@ function ArchitectureView({ theme }: { theme: typeof lightTheme }) {
 }
 
 function ApiView({ theme }: { theme: typeof lightTheme }) {
-  const primaryEndpoint = endpoints[0]
+  const firstMethodWithEndpoints = apiMethods.find((method) =>
+    endpoints.some((endpoint) => endpoint.method === method.id),
+  )?.id ?? 'GET'
+  const [activeMethod, setActiveMethod] = useState<ApiMethod>(firstMethodWithEndpoints)
+  const [selectedEndpointPath, setSelectedEndpointPath] = useState(
+    endpoints.find((endpoint) => endpoint.method === firstMethodWithEndpoints)?.path ?? endpoints[0]?.path ?? '',
+  )
+  const methodEndpoints = endpoints.filter((endpoint) => endpoint.method === activeMethod)
+  const selectedEndpoint =
+    methodEndpoints.find((endpoint) => endpoint.path === selectedEndpointPath) ?? methodEndpoints[0]
+
+  const selectMethod = (method: ApiMethod, nextEndpoints: Endpoint[]) => {
+    if (nextEndpoints.length === 0) {
+      return
+    }
+
+    setActiveMethod(method)
+    setSelectedEndpointPath(nextEndpoints[0].path)
+  }
 
   return (
     <div className="grid h-full min-h-0 gap-3 xl:grid-cols-[0.9fr_1.1fr]">
-      <div className="grid gap-2">
-        {endpoints.map((endpoint) => (
-          <div key={endpoint.path} className={`rounded-lg border p-3 ${theme.panel}`}>
-            <div className="flex items-start gap-3">
-              <MethodBadge method={endpoint.method} />
-              <div>
-                <p className="font-mono text-sm font-bold">{endpoint.path}</p>
-                <p className={`mt-1 text-xs leading-5 ${theme.muted}`}>{endpoint.description}</p>
-              </div>
+      <div className="grid min-h-0 gap-2">
+        <div className="scrollbar-hidden flex gap-2 overflow-x-auto pb-1" aria-label="HTTP методы">
+          {apiMethods.map((method) => {
+            const nextEndpoints = endpoints.filter((endpoint) => endpoint.method === method.id)
+            const isActive = activeMethod === method.id
+            const isDisabled = nextEndpoints.length === 0
+
+            return (
+              <button
+                key={method.id}
+                type="button"
+                onClick={() => selectMethod(method.id, nextEndpoints)}
+                disabled={isDisabled}
+                className={`whitespace-nowrap rounded-lg border px-3 py-2 text-xs font-black transition-colors ${
+                  isActive
+                    ? `${methodStyles[method.id]} shadow-[0_0_22px_rgba(200,242,74,0.16)]`
+                    : isDisabled
+                      ? 'border-current/10 bg-current/[0.03] opacity-45'
+                      : `${theme.pill} hover:border-[#c8f24a]`
+                }`}
+              >
+                {method.label}
+                <span className="ml-2 opacity-60">{nextEndpoints.length}</span>
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="scrollbar-hidden grid max-h-[42vh] gap-2 overflow-y-auto pr-1 xl:max-h-none">
+          {methodEndpoints.map((endpoint) => {
+            const isSelected = selectedEndpoint?.path === endpoint.path
+
+            return (
+              <button
+                key={`${endpoint.method}-${endpoint.path}`}
+                type="button"
+                onClick={() => setSelectedEndpointPath(endpoint.path)}
+                className={`rounded-lg border p-3 text-left transition-colors ${
+                  isSelected ? 'border-[#c8f24a] bg-[#c8f24a]/10' : theme.panel
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <MethodBadge method={endpoint.method} />
+                  <div>
+                    <p className="font-mono text-sm font-bold">{endpoint.path}</p>
+                    <p className={`mt-1 text-xs leading-5 ${theme.muted}`}>{endpoint.description}</p>
+                  </div>
+                </div>
+              </button>
+            )
+          })}
+          {methodEndpoints.length === 0 ? (
+            <div className={`rounded-lg border p-3 text-sm leading-6 ${theme.pill}`}>
+              Для выбранного метода в текущей документации нет опубликованных endpoint-ов.
             </div>
-          </div>
-        ))}
+          ) : null}
+        </div>
+
         <div className={`rounded-lg border p-3 text-sm leading-6 ${theme.pill}`}>
           Ошибки возвращаются в JSON. При некорректном запросе документация фиксирует формат с
           timestamp, status, error, message и path.
         </div>
       </div>
       <div className="grid min-h-0 gap-3">
-        <div className="grid gap-3 lg:grid-cols-2">
-          {primaryEndpoint.request ? (
-            <CodePanel title="POST /backtests запрос" code={primaryEndpoint.request} compact />
-          ) : null}
-          <CodePanel title="POST /backtests ответ" code={primaryEndpoint.response} compact />
-        </div>
-        <div className="grid gap-3 lg:grid-cols-2">
-          <CodePanel title="GET /backtests/{id}" code={endpoints[1].response} compact />
-          <CodePanel title="Ошибка API" code={errorResponseSnippet} compact />
-        </div>
+        {selectedEndpoint ? (
+          <>
+            <div className={`rounded-lg border p-3 ${theme.panel}`}>
+              <div className="flex flex-wrap items-center gap-2">
+                <MethodBadge method={selectedEndpoint.method} />
+                <span className="font-mono text-sm font-bold">{selectedEndpoint.path}</span>
+              </div>
+              <p className={`mt-2 text-sm leading-6 ${theme.muted}`}>{selectedEndpoint.description}</p>
+            </div>
+            <div className="grid gap-3 lg:grid-cols-2">
+              {selectedEndpoint.request ? (
+                <CodePanel
+                  title={`${selectedEndpoint.method} ${selectedEndpoint.path} запрос`}
+                  code={selectedEndpoint.request}
+                  compact
+                />
+              ) : null}
+              <CodePanel
+                title={`${selectedEndpoint.method} ${selectedEndpoint.path} ответ`}
+                code={selectedEndpoint.response}
+                compact
+              />
+              <CodePanel title="Ошибка API" code={errorResponseSnippet} compact />
+            </div>
+          </>
+        ) : null}
       </div>
     </div>
   )
