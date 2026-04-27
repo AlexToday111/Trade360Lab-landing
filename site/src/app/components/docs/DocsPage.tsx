@@ -1,5 +1,5 @@
 import { ArrowRight, Check, Copy, Database, Rocket } from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useState } from 'react'
 import { OrbitalSystem } from '../OrbitalSystem'
 import {
@@ -121,6 +121,7 @@ function MethodBadge({ method }: { method: ApiMethod }) {
 
 export function DocsPage({ isLightTheme }: DocsPageProps) {
   const [activeSection, setActiveSection] = useState<SectionId>('overview')
+  const shouldReduceMotion = useReducedMotion()
   const theme = isLightTheme ? lightTheme : darkTheme
   const activeLabel = navigationItems.find((item) => item.id === activeSection)?.label
 
@@ -171,7 +172,7 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
                   key={item.id}
                   type="button"
                   onClick={() => setActiveSection(item.id)}
-                  className={`whitespace-nowrap rounded-lg border px-3 py-2 text-sm font-semibold transition-all ${
+                  className={`whitespace-nowrap rounded-lg border px-3 py-2 text-sm font-semibold transition-colors duration-150 ${
                     activeSection === item.id
                       ? 'border-[#c8f24a] bg-[#c8f24a] text-black shadow-[0_0_24px_rgba(200,242,74,0.24)]'
                       : `${theme.pill} hover:border-[#c8f24a] hover:text-[#8faa22] dark:hover:text-[#c8f24a]`
@@ -188,15 +189,15 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
           <aside className={`hidden min-h-0 flex-col justify-between rounded-lg border p-4 backdrop-blur-xl lg:flex ${theme.panel}`}>
             <div>
               <motion.div
-                initial={{ opacity: 0, scale: 0.96 }}
+                initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.45, ease: 'easeOut' }}
+                transition={{ duration: 0.28, ease: 'easeOut' }}
                 className="relative mb-4"
               >
                 <motion.div
-                  className="absolute inset-0 bg-[#c8f24a] opacity-30 blur-2xl"
-                  animate={{ opacity: [0.16, 0.34, 0.16] }}
-                  transition={{ duration: 3, ease: 'easeInOut', repeat: Number.POSITIVE_INFINITY }}
+                  className="absolute inset-0 bg-[#c8f24a] opacity-20 blur-2xl"
+                  animate={shouldReduceMotion ? undefined : { opacity: [0.1, 0.2, 0.1] }}
+                  transition={{ duration: 6.5, ease: 'easeInOut', repeat: Number.POSITIVE_INFINITY }}
                 />
                 <div className="relative">
                   <h1 className="flex items-baseline text-[3.4rem] font-black leading-none tracking-tight sm:text-[4.8rem] lg:text-[5.6rem]">
@@ -227,10 +228,10 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeSection}
-                initial={{ opacity: 0, y: 12 }}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.2 }}
+                exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+                transition={{ duration: 0.14, ease: 'easeOut' }}
                 className="h-full min-h-0"
               >
                 {activeSection === 'overview' ? (
@@ -266,7 +267,7 @@ function OverviewView({ onSelect, theme }: { onSelect: (section: SectionId) => v
               key={card.id}
               type="button"
               onClick={() => onSelect(card.id)}
-              className={`group rounded-lg border p-4 text-left transition-all hover:-translate-y-0.5 ${theme.panel}`}
+              className={`group rounded-lg border p-4 text-left transition-colors duration-150 hover:border-[#c8f24a] ${theme.panel}`}
             >
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#c8f24a]/12 text-[#8faa22] dark:text-[#c8f24a]">
