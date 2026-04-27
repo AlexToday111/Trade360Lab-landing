@@ -13,7 +13,7 @@ import {
   TerminalSquare,
 } from 'lucide-react'
 
-export type SectionId = 'overview' | 'architecture' | 'api' | 'lifecycle' | 'data-model' | 'release'
+export type SectionId = 'overview' | 'architecture' | 'api' | 'lifecycle' | 'data-model' | 'launch'
 
 export type NavigationItem = {
   id: SectionId
@@ -69,7 +69,7 @@ export type DataEntity = {
   notes: string[]
 }
 
-export type ChecklistGroup = {
+export type LaunchGroup = {
   title: string
   items: string[]
 }
@@ -83,7 +83,7 @@ export const navigationItems: NavigationItem[] = [
   { id: 'api', label: 'API' },
   { id: 'lifecycle', label: 'Жизненный цикл' },
   { id: 'data-model', label: 'Модель данных' },
-  { id: 'release', label: 'Релиз' },
+  { id: 'launch', label: 'Запуск' },
 ]
 
 export const overviewCards: OverviewCard[] = [
@@ -112,9 +112,9 @@ export const overviewCards: OverviewCard[] = [
     icon: Database,
   },
   {
-    id: 'release',
-    title: 'Чеклист релиза',
-    description: 'Операционный список проверок для alpha-релиза.',
+    id: 'launch',
+    title: 'Запуск',
+    description: 'Локальный dev-сервер, production-сборка, Docker и базовые проверки.',
     icon: Rocket,
   },
 ]
@@ -177,12 +177,12 @@ export const dataFlowSteps: FlowStep[] = [
   },
 ]
 
-export const quickStartSnippet = `docker compose up --build
+export const quickStartSnippet = `cd site
+npm install
+npm run dev
 
-# frontend       http://localhost:3000
-# java api       http://localhost:18080
-# python parser  http://localhost:18000
-# postgresql     localhost:55432`
+# docs: http://localhost:5173/docs
+# home: http://localhost:5173`
 
 export const backtestStatuses: BacktestStatus[] = [
   {
@@ -321,43 +321,40 @@ export const dataEntities: DataEntity[] = [
   },
 ]
 
-export const releaseChecklist: ChecklistGroup[] = [
+export const launchGuide: LaunchGroup[] = [
   {
-    title: 'Объем',
-    items: ['Выбран тег или версия релиза.', 'Журнал изменений обновлен.', 'Заметки релиза подготовлены.'],
-  },
-  {
-    title: 'Качество кода',
-    items: ['Frontend: lint, typecheck, test:ci, build.', 'Python: ruff check и pytest.', 'Java: mvn -B test.'],
-  },
-  {
-    title: 'Запуск',
-    items: ['docker compose config -q.', 'docker compose up --build.', 'Frontend, Java health и Python health отвечают.'],
+    title: 'Сервисы',
+    items: ['Vite dev-сервер обслуживает лендинг и /docs.', 'Production-сборка собирается в site/dist/.', 'Nginx-контейнер из infra/docker/Dockerfile раздает готовую статику.'],
   },
   {
     title: 'Конфигурация',
-    items: ['Учетные данные для non-dev окружения настроены.', 'Переменные Telegram заданы только при включенной функции.', '.env файлы не закоммичены.'],
+    items: ['При необходимости скопируйте site/.env.example в site/.env.local.', 'VITE_REPOSITORY_URL задает ссылку для кнопки View Repository.', 'Для /docs отдельные переменные окружения не требуются.'],
   },
   {
-    title: 'Завершение',
-    items: ['Релизный коммит отправлен в main.', 'Релизный тег создан.', 'План отката задокументирован.'],
+    title: 'Разработка',
+    items: ['Установите зависимости в site/.', 'Запустите npm run dev.', 'Откройте /docs напрямую: http://localhost:5173/docs.'],
+  },
+  {
+    title: 'Production',
+    items: ['Соберите статику командой npm run build.', 'Проверьте результат через npm run preview.', 'Для контейнера используйте Dockerfile из infra/docker.'],
+  },
+  {
+    title: 'Проверка',
+    items: ['Главная страница открывается на корневом URL.', '/docs открывается только по прямому пути.', 'Навигация разделов и копирование code blocks работают без ошибок в консоли.'],
   },
 ]
 
-export const qualityCommands = `npm --prefix frontend run lint
-npm --prefix frontend run typecheck
-npm --prefix frontend run test:ci
-npm --prefix frontend run build
+export const qualityCommands = `cd site
+npm run build
 
-cd backend/python && .venv/bin/python -m ruff check .
-cd backend/python && .venv/bin/python -m pytest
+docker build -f infra/docker/Dockerfile -t trade360lab-landing .
+docker run --rm -p 4173:80 trade360lab-landing`
 
-cd backend/java && mvn -B test`
+export const runtimeCommands = `cd site
+npm run preview
 
-export const runtimeCommands = `docker compose config -q
-docker compose up --build
-curl http://localhost:18080/api/health
-curl http://localhost:18000/health`
+# preview: http://localhost:4173
+# docs:    http://localhost:4173/docs`
 
 export const statusIcons = {
   idle: CircleDashed,

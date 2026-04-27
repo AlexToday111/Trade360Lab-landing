@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Copy, Database, FileText } from 'lucide-react'
+import { ArrowRight, Check, Copy, Database, Rocket } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 import { OrbitalSystem } from '../OrbitalSystem'
@@ -10,11 +10,12 @@ import {
   dataFlowSteps,
   endpoints,
   errorResponseSnippet,
+  launchGuide,
   navigationItems,
   overviewCards,
   projectDescription,
   qualityCommands,
-  releaseChecklist,
+  quickStartSnippet,
   repositoryTree,
   runtimeCommands,
   statusIcons,
@@ -239,7 +240,7 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
                 {activeSection === 'api' ? <ApiView theme={theme} /> : null}
                 {activeSection === 'lifecycle' ? <LifecycleView theme={theme} /> : null}
                 {activeSection === 'data-model' ? <DataModelView theme={theme} /> : null}
-                {activeSection === 'release' ? <ReleaseView theme={theme} /> : null}
+                {activeSection === 'launch' ? <LaunchView theme={theme} /> : null}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -534,14 +535,14 @@ function DataModelView({ theme }: { theme: typeof lightTheme }) {
   )
 }
 
-function ReleaseView({ theme }: { theme: typeof lightTheme }) {
+function LaunchView({ theme }: { theme: typeof lightTheme }) {
   return (
     <div className="grid h-full min-h-0 gap-3 xl:grid-cols-[1fr_1fr]">
       <div className="grid gap-3 sm:grid-cols-2">
-        {releaseChecklist.map((group) => (
+        {launchGuide.map((group) => (
           <div key={group.title} className={`rounded-lg border p-3 ${theme.panel}`}>
             <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-[#8faa22] dark:text-[#c8f24a]" />
+              <Rocket className="h-4 w-4 text-[#8faa22] dark:text-[#c8f24a]" />
               <h3 className="font-bold">{group.title}</h3>
             </div>
             <div className="mt-2 grid gap-1.5">
@@ -556,8 +557,9 @@ function ReleaseView({ theme }: { theme: typeof lightTheme }) {
         ))}
       </div>
       <div className="grid gap-3">
-        <CodePanel title="Проверки качества" code={qualityCommands} compact />
-        <CodePanel title="Проверка запуска" code={runtimeCommands} compact />
+        <CodePanel title="Быстрый старт" code={quickStartSnippet} compact />
+        <CodePanel title="Сборка и Docker" code={qualityCommands} compact />
+        <CodePanel title="Preview" code={runtimeCommands} compact />
       </div>
     </div>
   )
