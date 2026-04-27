@@ -68,14 +68,8 @@ export type ChecklistGroup = {
   items: string[]
 }
 
-export const sourceFiles = [
-  'README.md',
-  'docs/api.md',
-  'docs/architecture.md',
-  'docs/backtest-flow.md',
-  'docs/data-model.md',
-  'docs/release-checklist.md',
-]
+export const projectDescription =
+  'Trade360Lab — лаборатория для разработки, тестирования и подготовки торговых стратегий. Платформа объединяет загрузку рыночных данных, управление стратегиями, запуск бэктестов, анализ результатов и подготовку к paper/live trading в едином рабочем процессе.'
 
 export const navigationItems: NavigationItem[] = [
   { id: 'overview', label: 'Обзор' },

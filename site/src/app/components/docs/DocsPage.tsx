@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpenText, Check, Copy, Database, FileText } from 'lucide-react'
+import { ArrowRight, Check, Copy, Database, FileText } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 import { OrbitalSystem } from '../OrbitalSystem'
@@ -11,12 +11,12 @@ import {
   errorResponseSnippet,
   navigationItems,
   overviewCards,
+  projectDescription,
   qualityCommands,
   quickStartSnippet,
   releaseChecklist,
   repositoryTree,
   runtimeCommands,
-  sourceFiles,
   statusIcons,
   systemLayers,
   type SectionId,
@@ -143,8 +143,13 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
         <header className={`mb-3 rounded-lg border px-4 py-3 backdrop-blur-xl ${theme.panel}`}>
           <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#c8f24a]/30 bg-[#c8f24a]/10 text-[#c8f24a]">
-                <BookOpenText className="h-5 w-5" />
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#c8f24a]/30 bg-black/10 p-1.5 dark:bg-white/5">
+                <img
+                  src="/YellowLogo.png"
+                  alt="Trade360Lab"
+                  className="h-full w-full object-contain"
+                  loading="eager"
+                />
               </div>
               <div>
                 <p className="text-sm font-bold">Documentation</p>
@@ -197,19 +202,11 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
                 {activeLabel}
               </p>
               <h2 className="mt-2 max-w-xl text-2xl font-black leading-tight sm:text-3xl">
-                Документация без длинного скролла
+                Trade360Lab
               </h2>
               <p className={`mt-3 max-w-xl text-sm leading-6 ${theme.muted}`}>
-                Разделы переключаются кнопками сверху. Контент собран из README и файлов docs:
-                архитектура, API, lifecycle бэктеста, модель данных и release checklist.
+                {projectDescription}
               </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {sourceFiles.map((source) => (
-                  <span key={source} className={`rounded-md border px-2.5 py-1 text-[11px] font-semibold ${theme.pill}`}>
-                    {source}
-                  </span>
-                ))}
-              </div>
             </div>
             <div className={`mt-4 hidden rounded-lg border p-3 text-xs leading-5 lg:block ${theme.pill}`}>
               STRATEGY RESEARCH / BACKTESTING / OPTIMIZATION
