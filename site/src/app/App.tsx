@@ -95,7 +95,7 @@ export default function App() {
       document.title = 'Documentation'
       description?.setAttribute(
         'content',
-        'Документация Trade360Lab: продукт, архитектура, API и запуск проекта.',
+        'Trade360Lab: продукт, архитектура, API и запуск проекта.',
       )
       return
     }

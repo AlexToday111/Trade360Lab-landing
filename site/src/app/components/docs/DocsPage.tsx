@@ -224,7 +224,7 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
             </div>
           </aside>
 
-          <div className={`min-h-0 rounded-lg border p-4 backdrop-blur-xl ${theme.panelStrong}`}>
+          <div className={`min-h-0 overflow-hidden rounded-lg border p-4 backdrop-blur-xl ${theme.panelStrong}`}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeSection}
@@ -232,7 +232,7 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
                 transition={{ duration: 0.14, ease: 'easeOut' }}
-                className="h-full min-h-0"
+                className="scrollbar-hidden h-full min-h-0 overflow-y-auto pr-1"
               >
                 {activeSection === 'overview' ? (
                   <OverviewView onSelect={setActiveSection} theme={theme} />
