@@ -147,8 +147,7 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
                 <BookOpenText className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-sm font-bold">Документация Trade360Lab</p>
-                <p className={`text-xs ${theme.muted}`}>Публичная документация по продукту и техническому устройству</p>
+                <p className="text-sm font-bold">Documentation</p>
               </div>
             </div>
             <nav className="scrollbar-hidden flex gap-2 overflow-x-auto" aria-label="Разделы документации">
@@ -239,10 +238,6 @@ export function DocsPage({ isLightTheme }: DocsPageProps) {
             </AnimatePresence>
           </div>
         </section>
-      </div>
-
-      <div className={`absolute bottom-3 left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap font-mono text-[10px] tracking-widest md:block ${theme.footer}`}>
-        ПУБЛИЧНАЯ ДОКУМЕНТАЦИЯ / ПРЯМОЙ URL
       </div>
 
       <div className={`absolute top-0 left-0 h-32 w-32 border-l-2 border-t-2 ${theme.corner}`} />

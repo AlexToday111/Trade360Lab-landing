@@ -92,10 +92,10 @@ export default function App() {
     const description = document.querySelector('meta[name="description"]')
 
     if (pageMode === 'docs') {
-      document.title = 'Документация Trade360Lab'
+      document.title = 'Documentation'
       description?.setAttribute(
         'content',
-        'Продуктовая и техническая документация Trade360Lab',
+        'Документация Trade360Lab: продукт, архитектура, API и запуск проекта.',
       )
       return
     }
