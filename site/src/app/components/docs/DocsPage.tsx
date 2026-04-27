@@ -13,7 +13,6 @@ import {
   overviewCards,
   projectDescription,
   qualityCommands,
-  quickStartSnippet,
   releaseChecklist,
   repositoryTree,
   runtimeCommands,
@@ -263,8 +262,7 @@ function OverviewView({ onSelect, theme }: { onSelect: (section: SectionId) => v
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-55">{card.source}</p>
-                  <h3 className="mt-1 font-bold">{card.title}</h3>
+                  <h3 className="font-bold">{card.title}</h3>
                   <p className={`mt-1 text-sm leading-5 ${theme.muted}`}>{card.description}</p>
                 </div>
                 <ArrowRight className="ml-auto h-4 w-4 shrink-0 opacity-50 transition-transform group-hover:translate-x-1" />
@@ -287,7 +285,6 @@ function OverviewView({ onSelect, theme }: { onSelect: (section: SectionId) => v
             </div>
           ))}
         </div>
-        <CodePanel title="Быстрый старт" code={quickStartSnippet} compact />
       </div>
     </div>
   )

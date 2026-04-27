@@ -24,7 +24,6 @@ export type OverviewCard = {
   id: SectionId
   title: string
   description: string
-  source: string
   icon: LucideIcon
 }
 
@@ -85,35 +84,30 @@ export const overviewCards: OverviewCard[] = [
     id: 'architecture',
     title: 'Архитектура',
     description: 'Четыре слоя: frontend, Spring Boot API, Python engine и PostgreSQL.',
-    source: 'docs/architecture.md',
     icon: Layers3,
   },
   {
     id: 'api',
     title: 'API',
     description: 'Endpoint-ы бэктеста: запуск, статус, сделки, equity curve и формат ошибок.',
-    source: 'docs/api.md',
     icon: Code2,
   },
   {
     id: 'lifecycle',
     title: 'Жизненный цикл',
     description: 'Состояния запуска от валидации до сохраненных артефактов.',
-    source: 'docs/backtest-flow.md',
     icon: GitBranch,
   },
   {
     id: 'data-model',
     title: 'Модель данных',
     description: 'Таблицы runs, trades, equity points и candles для выполнения бэктеста.',
-    source: 'docs/data-model.md',
     icon: Database,
   },
   {
     id: 'release',
     title: 'Чеклист релиза',
     description: 'Операционный список проверок для alpha-релиза.',
-    source: 'docs/release-checklist.md',
     icon: Rocket,
   },
 ]
